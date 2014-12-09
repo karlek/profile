@@ -10,6 +10,7 @@ import (
 	"path/filepath"
 	"runtime"
 	"runtime/pprof"
+	"time"
 )
 
 // Config controls the operation of the profile package.
@@ -109,10 +110,14 @@ func Start(cfg *Config) interface {
 		}
 		if !prof.Quiet {
 			log.Printf("profile: cpu profiling enabled, %s", fn)
+			snapshot := time.Now()
 		}
 		pprof.StartCPUProfile(f)
 		prof.closers = append(prof.closers, func() {
 			pprof.StopCPUProfile()
+			if !prof.Quiet {
+				log.Println(time.Since(snapshot))
+			}
 			f.Close()
 		})
 	}
