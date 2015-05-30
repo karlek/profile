@@ -108,9 +108,10 @@ func Start(cfg *Config) interface {
 		if err != nil {
 			log.Fatalf("profile: could not create cpu profile %q: %v", fn, err)
 		}
+		var snapshot time.Time
 		if !prof.Quiet {
 			log.Printf("profile: cpu profiling enabled, %s", fn)
-			snapshot := time.Now()
+			snapshot = time.Now()
 		}
 		pprof.StartCPUProfile(f)
 		prof.closers = append(prof.closers, func() {
